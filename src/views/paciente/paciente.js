@@ -473,7 +473,12 @@ const Laboratorio = {
                     setTimeout(function() { Laboratorio.error = ""; }, 5000);
                 }
 
-            })
+            }).catch(function(e) {
+                alert("Resultado no disponible.");
+                Laboratorio.loader = false;
+                verDocPDF.show = "";
+                Laboratorio.error = "";
+            });
 
     },
     fetchResultado: (url) => {
@@ -577,6 +582,10 @@ const Laboratorio = {
                                                         ),
                                                     ]),
                                                     m("div.col-lg-6.p-2.text-xl-right", [
+
+
+
+
                                                         m("button.capsul.fz-poppins.text-default.radius-pill.active", {
                                                             onclick: () => {
                                                                 Laboratorio.loader = true;

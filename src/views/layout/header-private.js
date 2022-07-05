@@ -20,7 +20,7 @@ const HeaderPrivate = {
                     m("div.overlay.op-P9"),
                     m("div.container",
                         m("div.row",
-                            m("div.col-md-12",)
+                            m("div.col-md-12", )
                         )
                     )
                 ]),
