@@ -654,7 +654,6 @@ const Laboratorio = {
 };
 
 
-
 const DetallePaciente = {
     data: [],
     detalle: [],
@@ -714,7 +713,11 @@ const DetallePaciente = {
                                 " Laboratorio "
                             )
                         ]),
-                        m("a.nav-link[data-toggle='pill'][href='#v-pills-imagen'][role='tab']", [
+                        m("a.nav-link[data-toggle='pill'][href='#v-pills-imagen'][role='tab']", {
+                            onclick: () => {
+                                MenuBoton.update = "RX";
+                            },
+                        }, [
                             m("i.icofont-file-image"),
                             m("span",
                                 " Imagen "
@@ -872,10 +875,12 @@ const DetalleClinico = {
             m("div.container",
                 m("div.m-pt-50.text-center", [
                     m(".alert.alert-danger[role='alert']", [
-                            DetallePaciente.error,
-                            " Ver Información disponible.",
+                            (DetallePaciente.error !== null) ? DetallePaciente.error : "¡Error inesperado!",
+                            " Reintentar nuevamente.",
                             m("a", {
-                                href: "/"
+                                onclick: (e) => {
+                                    window.location.reload();
+                                }
                             }, " Click Aquí"),
 
                         ]
