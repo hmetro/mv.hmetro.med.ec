@@ -2,19 +2,24 @@ import HeaderPublic from '../layout/header-public';
 import App from '../app';
 import m from 'mithril';
 import Loader from '../loader';
+import printJS from 'print-js';
 
 
 const VisorRis = {
     show: "",
+    url: "",
     view: () => {
+
+        VisorRis.url = "https://imagen.hmetro.med.ec/zfp?Lights=on&mode=proxy#view&pid=" + ResultadoPaciente.nhc + "&un=WEBAPI&pw=lEcfvZxzlXTsfimMMonmVZZ15IqsgEcdV%2forI8EUrLY%3d";
+
         return [
             m("div", [
                 m("iframe", {
-                    src: "https://imagen.hmetro.med.ec/zfp?Lights=on&mode=proxy#view&pid=" + ResultadoPaciente.nhc + "&un=WEBAPI&pw=lEcfvZxzlXTsfimMMonmVZZ15IqsgEcdV%2forI8EUrLY%3d",
+                    src: VisorRis.url,
                     "style": {
                         "frameborder": "0",
                         "width": "100%",
-                        "height": document.body.clientHeight - (document.body.clientHeight * 0.02) + "px"
+                        "height": "48rem"
                     }
                 })
             ]),
@@ -40,6 +45,12 @@ const Imagen = {
     error: "",
     showResultados: "d-none",
     showButtons: "",
+    imprimirResultado: (url) => {
+        printJS(url)
+    },
+    descargarResultado: (url) => {
+        window.open(url)
+    },
     fetch: () => {
         Imagen.data = [];
         Imagen.error = "";
@@ -59,7 +70,8 @@ const Imagen = {
                 }
             })
             .catch(function(e) {
-                Imagen.error = e.message;
+                Imagen.error = "Error de red inesperado. Lo reintetaremos por ti automaticamente en unos segundos. Si el inconveniente persiste comunícate con soporte. Ext: 2020 CONCAS.";
+                setTimeout(function() { Imagen.fetch(); }, 5000);
             })
     },
     oninit: () => {
@@ -156,15 +168,25 @@ const Imagen = {
                                                             " Fecha: " + _v.FECHA
                                                         ),
                                                     ]),
+
                                                     m("div.col-lg-6.p-2.text-xl-right", [
                                                         m("button.capsul.fz-poppins.text-default.radius-pill.active", {
                                                             onclick: () => {
-                                                                window.open(_v.URL_INFORME)
+                                                                Imagen.descargarResultado(_v.URL_INFORME)
                                                             },
                                                             "style": { "cursor": "pointer" }
                                                         }, [
                                                             m("i.icofont-download"),
                                                             " Descargar "
+                                                        ]),
+                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                            onclick: () => {
+                                                                Imagen.imprimirResultado(_v.URL_INFORME)
+                                                            },
+                                                            "style": { "cursor": "pointer" }
+                                                        }, [
+                                                            m("i.icofont-print"),
+                                                            " Imprimir "
                                                         ])
                                                     ])
                                                 ])
@@ -504,6 +526,31 @@ const Laboratorio = {
             });
 
     },
+    imprimirResultado: (url) => {
+        m.request({
+                method: "GET",
+                url: url,
+                headers: {
+                    "Authorization": localStorage.accessToken,
+                },
+            })
+            .then(function(result) {
+                Laboratorio.loader = false;
+                if (result.status !== undefined && result.status) {
+                    printJS(result.url)
+                } else {
+                    Laboratorio.error = "Resultado no disponible.";
+                    setTimeout(function() { Laboratorio.error = ""; }, 5000);
+                }
+
+            }).catch(function(e) {
+                alert("Resultado no disponible.");
+                Laboratorio.loader = false;
+                verDocPDF.show = "";
+                Laboratorio.error = "";
+            });
+
+    },
     fetch: () => {
         Laboratorio.data = [];
         Laboratorio.error = "";
@@ -525,7 +572,8 @@ const Laboratorio = {
 
             })
             .catch(function(e) {
-                Laboratorio.error = e.message;
+                Laboratorio.error = "Error de red inesperado. Lo reintetaremos por ti automaticamente en unos segundos. Si el inconveniente persiste comunícate con soporte. Ext: 2020 CONCAS.";
+                setTimeout(function() { Laboratorio.fetch(); }, 5000);
             })
     },
     oninit: () => {
@@ -568,13 +616,72 @@ const Laboratorio = {
                             m("tbody", [
                                 Laboratorio.data.map(function(_v, _i, _contentData) {
 
+
                                     var _fechaHoy = moment(new Date()).format("DD-MM-YYYY");
 
                                     return [
                                         m("tr[role='row']", { "style": { "background-color": "transparent" } },
                                             m("td", { "style": { "border-color": "transparent", "padding": "0px" } },
                                                 m("div.row.bg-white.radius-5.p-2.article-tags", [
-                                                    m("div.col-lg-6.p-2", [
+                                                    m("div.col-12.p-0.text-right", [
+                                                        [
+                                                            ((Number(_v.ID_STUDIO) > 22000000) ? [
+                                                                m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                                    title: " Status Pedido ",
+                                                                    onclick: () => {
+                                                                        window.open("https://plus.metrovirtual.hospitalmetropolitano.org/laboratorio/pedido/" + Number(_v.ID_STUDIO))
+
+                                                                    },
+                                                                    "style": { "cursor": "pointer" }
+                                                                }, [
+                                                                    m("i.icofont-ui-timer"),
+                                                                    " Status "
+
+                                                                ])
+                                                            ] : [])
+                                                        ],
+                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                            title: " Ver Resultado ",
+                                                            onclick: () => {
+                                                                Laboratorio.loader = true;
+                                                                verDocPDF.show = "d-none";
+                                                                Laboratorio.verResultado(_v.urlPdf);
+
+                                                            },
+                                                            "style": { "cursor": "pointer" }
+                                                        }, [
+                                                            m("i.icofont-eye-alt"),
+                                                            " Ver "
+
+                                                        ]),
+                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                            title: " Descargar Resultado ",
+
+                                                            onclick: () => {
+                                                                Laboratorio.loader = true;
+                                                                Laboratorio.fetchResultado(_v.urlPdf);
+                                                            },
+                                                            "style": { "cursor": "pointer" }
+                                                        }, [
+                                                            m("i.icofont-download"),
+                                                            " Descargar "
+
+                                                        ]),
+                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                            title: " Imprimir Resultado ",
+
+                                                            onclick: () => {
+                                                                Laboratorio.loader = true;
+                                                                Laboratorio.imprimirResultado(_v.urlPdf);
+                                                            },
+                                                            "style": { "cursor": "pointer" }
+                                                        }, [
+                                                            m("i.icofont-print"),
+                                                            " Imprimir "
+
+                                                        ]),
+                                                    ]),
+                                                    m("div.col-12.p-2", [
                                                         m("div", {
                                                                 "style": {
                                                                     "display": ((_fechaHoy == _v.FECHA_REGISTRADO) ? "block" : "none")
@@ -593,33 +700,7 @@ const Laboratorio = {
                                                             " Fecha y Hora: " + _v.FECHA
                                                         ),
                                                     ]),
-                                                    m("div.col-lg-6.p-2.text-xl-right", [
 
-                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
-                                                            onclick: () => {
-                                                                Laboratorio.loader = true;
-                                                                verDocPDF.show = "d-none";
-                                                                Laboratorio.verResultado(_v.urlPdf);
-
-                                                            },
-                                                            "style": { "cursor": "pointer" }
-                                                        }, [
-                                                            m("i.icofont-eye-alt"),
-                                                            " Ver"
-
-                                                        ]),
-                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
-                                                            onclick: () => {
-                                                                Laboratorio.loader = true;
-                                                                Laboratorio.fetchResultado(_v.urlPdf);
-                                                            },
-                                                            "style": { "cursor": "pointer" }
-                                                        }, [
-                                                            m("i.icofont-download"),
-                                                            " Descargar"
-
-                                                        ]),
-                                                    ])
                                                 ])
                                             )
                                         )
@@ -687,7 +768,8 @@ const DetallePaciente = {
 
             })
             .catch(function(e) {
-                DetallePaciente.error = e.message;
+                DetallePaciente.error = "Error de red inesperado. Lo reintetaremos por ti automaticamente en unos segundos. Si el inconveniente persiste comunícate con soporte. Ext: 2020 CONCAS.";
+                setTimeout(function() { DetallePaciente.fetch(); }, 5000);
             })
     },
     view: () => {
@@ -867,7 +949,7 @@ const DetalleClinico = {
     labelOperation: "Detalle:",
     inZoom: "",
     oninit: () => {
-        MenuBoton.update = "SV";
+        MenuBoton.update = "LAB";
         DetallePaciente.fetch();
     },
     view: () => {
@@ -881,7 +963,7 @@ const DetalleClinico = {
                                 onclick: (e) => {
                                     window.location.reload();
                                 }
-                            }, " Click Aquí"),
+                            }, " Click Aquí "),
 
                         ]
 
@@ -942,16 +1024,15 @@ const ResultadoPaciente = {
     },
     view: () => {
 
-        if (VisorRis.show.length === 0) {
-            return [
+        return [
+            m("div." + ((VisorRis.show.length === 0) ? "" : "d-none"), [
                 (DetalleClinico.inZoom.length === 0) ? m(HeaderPublic) : "",
                 m(DetalleClinico)
-            ];
-        } else {
-            return [
+            ]),
+            m("div." + ((VisorRis.show.length === 0) ? "d-none" : ""), [
                 m(VisorRis)
-            ];
-        }
+            ])
+        ];
 
     },
 
@@ -1483,8 +1564,6 @@ function _Main() {
 
 
 }
-
-
 
 
 

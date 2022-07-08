@@ -7,15 +7,19 @@ import Loader from '../loader';
 
 const VisorRis = {
     show: "",
+    url: "",
     view: () => {
+
+        VisorRis.url = "https://imagen.hmetro.med.ec/zfp?Lights=on&mode=proxy#view&pid=" + ResultadoPaciente.nhc + "&un=WEBAPI&pw=lEcfvZxzlXTsfimMMonmVZZ15IqsgEcdV%2forI8EUrLY%3d";
+
         return [
             m("div", [
                 m("iframe", {
-                    src: "https://imagen.hmetro.med.ec/zfp?Lights=on&mode=proxy#view&pid=" + Paciente.nhc + "&un=WEBAPI&pw=lEcfvZxzlXTsfimMMonmVZZ15IqsgEcdV%2forI8EUrLY%3d",
+                    src: VisorRis.url,
                     "style": {
                         "frameborder": "0",
                         "width": "100%",
-                        "height": document.body.clientHeight - (document.body.clientHeight * 0.02) + "px"
+                        "height": "48rem"
                     }
                 })
             ]),
@@ -1742,8 +1746,6 @@ const MenuBoton = {
         }
 
 
-
-
     },
     view: () => {
         return [
@@ -1937,16 +1939,16 @@ const Paciente = {
     },
     view: () => {
 
-        if (VisorRis.show.length === 0) {
-            return [
-                (DetalleClinico.inZoom.length === 0) ? m(HeaderPrivate) : "",
+
+        return [
+            m("div." + ((VisorRis.show.length === 0) ? "" : "d-none"), [
+                (DetalleClinico.inZoom.length === 0) ? m(HeaderPublic) : "",
                 m(DetalleClinico)
-            ];
-        } else {
-            return [
+            ]),
+            m("div." + ((VisorRis.show.length === 0) ? "d-none" : ""), [
                 m(VisorRis)
-            ];
-        }
+            ])
+        ];
 
     },
 

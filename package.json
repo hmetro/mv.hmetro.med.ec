@@ -23,7 +23,8 @@
     },
     "homepage": "https://github.com/hmetro/mv.hmetro.med.ec.git#readme",
     "dependencies": {
-        "mithril": "^2.2.2"
+        "mithril": "^2.2.2",
+        "print-js": "^1.6.0"
     },
     "devDependencies": {
         "@babel/core": "^7.18.5",
