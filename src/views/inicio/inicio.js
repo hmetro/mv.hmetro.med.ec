@@ -13,7 +13,9 @@ const Inicio = {
     },
     oncreate: () => {
         document.title = "Inicio | " + App.title;
+        HeaderPublic.getIp();
         _Main();
+
     },
     view: () => {
         return [

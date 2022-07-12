@@ -1,5 +1,8 @@
 const HeadPublic = {
+    ip: "",
     view: () => {
+
+
         return [
             m("header",
                 m("div..position-relative.set-bg.breadcrumb-container", { "style": { "background-position": "center center", "background-size": "cover", "background-repeat": "no-repeat" } }, [
@@ -20,9 +23,15 @@ const HeadPublic = {
                             m("div.nav_outer.mr-auto.ml-lg-auto.mr-lg-0", [
                                 m("img.d-block.d-md-none[src='assets/images/logo-white.png'][alt='']"),
                                 m("ul.navbar-nav.bcbd_nav.mr-lg-4.", [
-
                                     m("li.nav-item",
-                                        m("a.nav-link[href='contact.html']",
+                                        m("a.nav-link[href='/']",
+                                            " IP: ",
+                                            HeadPublic.ip
+                                        )
+                                    ),
+
+                                    m("li.nav-item.d-none",
+                                        m("a.nav-link[href='/']",
                                             " V3.0.0 "
                                         )
                                     )
@@ -38,5 +47,8 @@ const HeadPublic = {
     },
 
 };
+
+
+
 
 export default HeadPublic;

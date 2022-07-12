@@ -352,25 +352,7 @@ const PageResultados = {
             return m.route.set('/auth');
         }
     },
-    getIp: () => {
 
-        internalIp().then(function(ip) {
-            PageResultados.ip = ip;
-
-            if (!ip.includes('172.16')) {
-                alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
-                return m.route.set('/inicio');
-            } else {
-                if (!ip.includes('172.16') && !ip.includes('172.17')) {
-                    alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
-                    return m.route.set('/inicio');
-                }
-            }
-
-
-        })
-
-    },
     oncreate: () => {
         submitBusqueda();
         PageResultados.getIp();
@@ -475,13 +457,7 @@ const PageResultados = {
                         ])
                     ]),
                     m("div.row.text-center.m-pt-20.m-pb-60.m-mt-20", [
-                        m("div.col-12.pd-r-0.pd-l-0.pd-b-20.", [
-                            m(".", {}, [
-                                "IP: ",
-                                PageResultados.ip
-                            ])
 
-                        ]),
                         m("div.col-12.pd-r-0.pd-l-0.pd-b-20.d-none", [
                             m(".text-primary", {
                                 "style": { "cursor": "pointer" }
@@ -522,49 +498,6 @@ function countWords(str) {
     return str.trim().split(/\s+/).length;
 }
 
-const internalIp = async() => {
-    if (!RTCPeerConnection) {
-        throw new Error("Not supported.")
-    }
-
-    const peerConnection = new RTCPeerConnection({ iceServers: [] })
-
-    peerConnection.createDataChannel('')
-    peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), () => {})
-
-    peerConnection.addEventListener("icecandidateerror", (event) => {
-        throw new Error(event.errorText)
-    })
-
-    return new Promise(async resolve => {
-        peerConnection.addEventListener("icecandidate", async({ candidate }) => {
-            peerConnection.close()
-
-            if (candidate && candidate.candidate) {
-                const result = candidate.candidate.split(" ")[4]
-                if (result.endsWith(".local")) {
-                    const inputDevices = await navigator.mediaDevices.enumerateDevices()
-                    const inputDeviceTypes = inputDevices.map(({ kind }) => kind)
-
-                    const constraints = {}
-
-                    if (inputDeviceTypes.includes("audioinput")) {
-                        constraints.audio = true
-                    } else if (inputDeviceTypes.includes("videoinput")) {
-                        constraints.video = true
-                    } else {
-                        throw new Error("An audio or video input device is required!")
-                    }
-
-                    const mediaStream = await navigator.mediaDevices.getUserMedia(constraints)
-                    mediaStream.getTracks().forEach(track => track.stop())
-                    resolve(internalIp())
-                }
-                resolve(result)
-            }
-        })
-    })
-}
 
 
 
