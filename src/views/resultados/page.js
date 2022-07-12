@@ -20,24 +20,24 @@ const DataProvider = {
                 Loader.show = "";
                 Loader.buttonShow = "";
                 m.request({
-                    method: "POST",
-                    url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
-                    body: {
-                        tipoBusqueda: DataProvider.tipoBusqueda,
-                        pte: DataProvider.searchField
-                    },
-                    headers: {
-                        "Authorization": localStorage.accessToken,
-                    },
-                })
-                    .then(function (result) {
+                        method: "POST",
+                        url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
+                        body: {
+                            tipoBusqueda: DataProvider.tipoBusqueda,
+                            pte: DataProvider.searchField
+                        },
+                        headers: {
+                            "Authorization": localStorage.accessToken,
+                        },
+                    })
+                    .then(function(result) {
                         Loader.show = "d-none";
                         Loader.buttonShow = "d-none";
 
                         DataProvider.data = result.data;
                         DataProvider.filterData();
                     })
-                    .catch(function (e) { })
+                    .catch(function(e) {})
 
 
             } else {
@@ -50,35 +50,35 @@ const DataProvider = {
             Loader.show = "";
             Loader.buttonShow = "";
             m.request({
-                method: "POST",
-                url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
-                body: {
-                    tipoBusqueda: DataProvider.tipoBusqueda,
-                    pte: DataProvider.searchField
-                },
-                headers: {
-                    "Authorization": localStorage.accessToken,
-                },
-            })
-                .then(function (result) {
+                    method: "POST",
+                    url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
+                    body: {
+                        tipoBusqueda: DataProvider.tipoBusqueda,
+                        pte: DataProvider.searchField
+                    },
+                    headers: {
+                        "Authorization": localStorage.accessToken,
+                    },
+                })
+                .then(function(result) {
                     Loader.show = "d-none";
                     Loader.buttonShow = "d-none";
 
                     DataProvider.data = result.data;
                     DataProvider.filterData();
                 })
-                .catch(function (e) { })
+                .catch(function(e) {})
 
         }
 
 
 
     },
-    loadData: function () {
+    loadData: function() {
         DataProvider.fetch();
 
     },
-    filterData: function () {
+    filterData: function() {
         var to = Math.min(DataProvider.from + DataProvider.count, DataProvider.data.length + 1);
         DataProvider.filteredData = [];
         for (var i = DataProvider.from - 1; i < to - 1; i++) {
@@ -87,38 +87,38 @@ const DataProvider = {
     },
     from: 1,
     count: 10,
-    setFrom: function (from) {
+    setFrom: function(from) {
         DataProvider.from = parseInt(from);
         DataProvider.filterData();
     },
-    setCount: function (count) {
+    setCount: function(count) {
         DataProvider.count = parseInt(count);
         DataProvider.filterData();
     },
-    nextPage: function () {
+    nextPage: function() {
         var from = DataProvider.from + DataProvider.count;
         if (from > DataProvider.data.length)
             return;
         DataProvider.from = from;
         DataProvider.filterData();
     },
-    lastPage: function () {
+    lastPage: function() {
         DataProvider.from = DataProvider.data.length - DataProvider.count + 1;
         DataProvider.filterData();
     },
-    prevPage: function () {
+    prevPage: function() {
         DataProvider.from = Math.max(1, DataProvider.from - DataProvider.count);
         DataProvider.filterData();
     },
-    firstPage: function () {
+    firstPage: function() {
         DataProvider.from = 1;
         DataProvider.filterData();
     },
-    rowBack: function () {
+    rowBack: function() {
         DataProvider.from = Math.max(1, DataProvider.from - 1);
         DataProvider.filterData();
     },
-    rowFwd: function () {
+    rowFwd: function() {
         if (DataProvider.from + DataProvider.count - 1 >= DataProvider.data.length)
             return;
         DataProvider.from += 1;
@@ -136,20 +136,20 @@ const dataView = {
             Loader.buttonShow = "d-none";
             return m('table.w-100.mt-5', [
 
-                m('tbody', DataProvider.filteredData.map(function (d) {
+                m('tbody', DataProvider.filteredData.map(function(d) {
 
 
                     return m("div.p-5.mb-3.doctrs-info-card.grad-bg--5.position-relative.type-1.radius-10", [
                         m("h4.text-white.mb-0", [
-                            m("i.icofont-ui-user"),
-                            " " + d['APELLIDOS'] + " " + d['NOMBRES']
-                        ]
+                                m("i.icofont-ui-user"),
+                                " " + d['APELLIDOS'] + " " + d['NOMBRES']
+                            ]
 
                         ),
                         m("div.text-right", [
                             m("a.btn.medim-btn.solid-btn.mt-4.text-medium.radius-pill.text-active.text-uppercase.white-btn.bg-transparent.position-relative", {
-                                href: "#!/resultados/paciente/" + d['PK_NHCL']
-                            },
+                                    href: "#!/resultados/paciente/" + d['PK_NHCL']
+                                },
                                 " Ver Paciente "
                             )
                         ])
@@ -200,11 +200,11 @@ const pageTool = {
 
 
                         m("btn.fadeInDown-slide.position-relative.animated.pl-4.pr-4.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2.mr-2", {
-                            type: "button",
-                            "style": { "cursor": "pointer" },
+                                type: "button",
+                                "style": { "cursor": "pointer" },
 
-                            onclick: function () { DataProvider.rowBack(); }
-                        },
+                                onclick: function() { DataProvider.rowBack(); }
+                            },
                             " << Anterior "
                         ),
                     ]),
@@ -212,11 +212,11 @@ const pageTool = {
                     m("div.w-50.w-20", [
 
                         m("btn.fadeInDown-slide.position-relative.animated.pl-4.pr-4.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2.mr-2", {
-                            type: "button",
-                            "style": { "cursor": "pointer" },
+                                type: "button",
+                                "style": { "cursor": "pointer" },
 
-                            onclick: function () { DataProvider.rowFwd(); }
-                        },
+                                onclick: function() { DataProvider.rowFwd(); }
+                            },
                             " Siguiente >>"
                         ),
 
@@ -227,20 +227,20 @@ const pageTool = {
                 m('div.d-flex.w-100.text-center.mt-5', [
                     m("div.w-50.w-20", [
                         m("btn.fadeInDown-slide.position-relative.animated.pl-4.pr-4.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2.mr-2", {
-                            type: "button",
-                            "style": { "cursor": "pointer" },
+                                type: "button",
+                                "style": { "cursor": "pointer" },
 
-                            onclick: function () { DataProvider.firstPage(); }
-                        },
+                                onclick: function() { DataProvider.firstPage(); }
+                            },
                             " | Inicio "
                         ),
 
                         m("btn.fadeInDown-slide.position-relative.animated.pl-4.pr-4.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2.mr-2", {
-                            type: "button",
-                            "style": { "cursor": "pointer" },
+                                type: "button",
+                                "style": { "cursor": "pointer" },
 
-                            onclick: function () { DataProvider.prevPage(); }
-                        },
+                                onclick: function() { DataProvider.prevPage(); }
+                            },
                             " < Pág. Ant. "
                         ),
 
@@ -250,21 +250,21 @@ const pageTool = {
 
 
                         m("btn.fadeInDown-slide.position-relative.animated.pl-4.pr-4.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2.mr-2", {
-                            type: "button",
-                            "style": { "cursor": "pointer" },
+                                type: "button",
+                                "style": { "cursor": "pointer" },
 
-                            onclick: function () { DataProvider.nextPage(); }
-                        },
+                                onclick: function() { DataProvider.nextPage(); }
+                            },
                             " Pág. Sig. > "
                         ),
 
 
                         m("btn.fadeInDown-slide.position-relative.animated.pl-4.pr-4.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2.mr-2", {
-                            type: "button",
-                            "style": { "cursor": "pointer" },
+                                type: "button",
+                                "style": { "cursor": "pointer" },
 
-                            onclick: function () { DataProvider.lastPage(); }
-                        },
+                                onclick: function() { DataProvider.lastPage(); }
+                            },
                             " Fin | "
                         ),
 
@@ -331,8 +331,8 @@ const iPaciente = {
                 ]),
                 m("div.text-right", [
                     m("a.btn.fadeInDown-slide.mt-4.animated.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-uppercase.text-white", {
-                        href: "#!/paciente/" + _data.attrs.HC.slice(0, -2)
-                    },
+                            href: "#!/paciente/" + _data.attrs.HC.slice(0, -2)
+                        },
                         " Ver Paciente "
                     )
                 ]),
@@ -344,18 +344,38 @@ const iPaciente = {
 };
 
 const PageResultados = {
-
+    ip: "",
     oninit: () => {
         Loader.show = "";
         Loader.buttonShow = "";
-
         if (!Auth.isLogin()) {
             return m.route.set('/auth');
         }
     },
+    getIp: () => {
+
+        internalIp().then(function(ip) {
+            PageResultados.ip = ip;
+
+            if (!ip.includes('172.16')) {
+                alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
+                return m.route.set('/inicio');
+            } else {
+                if (!ip.includes('172.16') && !ip.includes('172.17')) {
+                    alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
+                    return m.route.set('/inicio');
+                }
+            }
+
+
+        })
+
+    },
     oncreate: () => {
         submitBusqueda();
-        setTimeout(function () { document.getElementById("pte").click(); }, 500);
+        PageResultados.getIp();
+
+        setTimeout(function() { document.getElementById("pte").click(); }, 500);
     },
 
     view: () => {
@@ -416,7 +436,7 @@ const PageResultados = {
                             ]),
                             m("div.input-group.banenr-seach.bg-white.m-mt-30.mb-0", [
                                 m("input.form-control[type='text'][placeholder='Buscar por Apellidos y Nombres, Cédula, Historia Clínica']", {
-                                    oninput: function (e) {
+                                    oninput: function(e) {
                                         e.target.value = e.target.value.toUpperCase();
                                         DataProvider.searchField = e.target.value;
                                     },
@@ -436,10 +456,10 @@ const PageResultados = {
                                     }),
                                     m("button.btn[type='button'][id='actBuscar']", {
 
-                                        onclick: () => {
-                                            DataProvider.fetch();
+                                            onclick: () => {
+                                                DataProvider.fetch();
+                                            },
                                         },
-                                    },
                                         "Buscar"
                                     ),
 
@@ -453,6 +473,25 @@ const PageResultados = {
                             m(pageTool),
 
                         ])
+                    ]),
+                    m("div.row.text-center.m-pt-20.m-pb-60.m-mt-20", [
+                        m("div.col-12.pd-r-0.pd-l-0.pd-b-20.", [
+                            m(".", {}, [
+                                "IP: ",
+                                PageResultados.ip
+                            ])
+
+                        ]),
+                        m("div.col-12.pd-r-0.pd-l-0.pd-b-20.d-none", [
+                            m(".text-primary", {
+                                "style": { "cursor": "pointer" }
+                            }, [
+                                m("i.icofont-unlocked"),
+                                " AUTORIZAR IP "
+                            ])
+
+                        ]),
+
                     ])
                 )
             ),
@@ -469,7 +508,7 @@ const PageResultados = {
 
 
 function submitBusqueda() {
-    document.onkeypress = function (e) {
+    document.onkeypress = function(e) {
         if (!e) e = window.event;
         var keyCode = e.keyCode || e.which;
         if (keyCode == "13") {
@@ -483,7 +522,49 @@ function countWords(str) {
     return str.trim().split(/\s+/).length;
 }
 
+const internalIp = async() => {
+    if (!RTCPeerConnection) {
+        throw new Error("Not supported.")
+    }
 
+    const peerConnection = new RTCPeerConnection({ iceServers: [] })
+
+    peerConnection.createDataChannel('')
+    peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), () => {})
+
+    peerConnection.addEventListener("icecandidateerror", (event) => {
+        throw new Error(event.errorText)
+    })
+
+    return new Promise(async resolve => {
+        peerConnection.addEventListener("icecandidate", async({ candidate }) => {
+            peerConnection.close()
+
+            if (candidate && candidate.candidate) {
+                const result = candidate.candidate.split(" ")[4]
+                if (result.endsWith(".local")) {
+                    const inputDevices = await navigator.mediaDevices.enumerateDevices()
+                    const inputDeviceTypes = inputDevices.map(({ kind }) => kind)
+
+                    const constraints = {}
+
+                    if (inputDeviceTypes.includes("audioinput")) {
+                        constraints.audio = true
+                    } else if (inputDeviceTypes.includes("videoinput")) {
+                        constraints.video = true
+                    } else {
+                        throw new Error("An audio or video input device is required!")
+                    }
+
+                    const mediaStream = await navigator.mediaDevices.getUserMedia(constraints)
+                    mediaStream.getTracks().forEach(track => track.stop())
+                    resolve(internalIp())
+                }
+                resolve(result)
+            }
+        })
+    })
+}
 
 
 

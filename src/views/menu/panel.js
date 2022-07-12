@@ -1,10 +1,12 @@
 var _modulos_ = [
     { id: 1, title: "Triaje (MV SACR)", icon: "nurse-alt", url: "http://172.16.253.18/mvsacr" },
-    { id: 2, title: "Admisiones (MV SOUL)", icon: "hospital", url: "http://172.16.253.18/soul-mv" },
+    { id: 2, title: "HIS (MV SOUL)", icon: "hospital", url: "http://172.16.253.18/soul-mv" },
     { id: 3, title: "Historia Clínica (MV PEP)", icon: "patient-file", url: "http://172.16.253.18/mvpep" },
-    { id: 4, title: "Sistema de Apoyo (MV SOUL)", icon: "support", url: "http://172.16.253.18/soul-mv" },
     { id: 5, title: "Resultados de Imagen y Laboratorio", icon: "doctor", url: "#!/resultados" },
     { id: 6, title: "Metrovirtual Plus", icon: "plus-square", url: "https://plus.metrovirtual.hospitalmetropolitano.org/" },
+    { id: 7, title: "Cambio de contraseña (MV)", icon: "ui-unlock", url: "https://metropolitano.proactivanet.com/proactivanet/portal/ui/loginform/changePasswordAD.paw" },
+    { id: 8, title: "Manual de cambio de contraseña", icon: "file-document", url: "http://mv.hmetro.med.ec/manual.cambio.contraseña.pdf" },
+
 ];
 
 const Modulos = {
@@ -84,7 +86,7 @@ const Modulos = {
 
 
             if (i.id == 5) {
-                return m("div.col-sm-12.col-md-12.col-lg-4",
+                return m("div.col-sm-12.col-md-12.col-lg-3",
                     m("a", {
                         href: i.url,
 
@@ -105,7 +107,47 @@ const Modulos = {
             }
 
             if (i.id == 6) {
-                return m("div.col-sm-12.col-md-12.col-lg-4",
+                return m("div.col-sm-12.col-md-12.col-lg-3",
+                    m("a", {
+                        href: i.url,
+                        target: "_blank"
+
+                    }, [
+                        m("div.single-service.type-1.radius-10.position-relative.service-wrapper.s-dp-10-60.m-mb-50", [
+                            m("div.service-circle.position-relative.mb-4.text-active.m-bg-4.rounded-circle.d-flex.align-items-center.justify-content-center",
+                                m("span.icofont-" + i.icon + ".text-grad-1.fz-50")
+
+                            ),
+                            m("h5.text-dark2.mb-3.position-relative.pt-2",
+                                i.title
+                            )
+                        ])
+                    ])
+                )
+            }
+
+            if (i.id == 7) {
+                return m("div.col-sm-12.col-md-12.col-lg-3",
+                    m("a", {
+                        href: i.url,
+                        target: "_blank"
+
+                    }, [
+                        m("div.single-service.type-1.radius-10.position-relative.service-wrapper.s-dp-10-60.m-mb-50", [
+                            m("div.service-circle.position-relative.mb-4.text-active.m-bg-4.rounded-circle.d-flex.align-items-center.justify-content-center",
+                                m("span.icofont-" + i.icon + ".text-grad-1.fz-50")
+
+                            ),
+                            m("h5.text-dark2.mb-3.position-relative.pt-2",
+                                i.title
+                            )
+                        ])
+                    ])
+                )
+            }
+
+            if (i.id == 8) {
+                return m("div.col-sm-12.col-md-12.col-lg-3",
                     m("a", {
                         href: i.url,
                         target: "_blank"

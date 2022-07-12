@@ -9,6 +9,10 @@ const App = {
     },
     oncreate: () => {
         document.title = "Bienvenido | " + App.title;
+        var loc = window.location.href + '';
+        if (loc.indexOf('http://') == 0) {
+            window.location.href = loc.replace('http://', 'https://');
+        }
     },
     isAuth: () => {
         if (Auth.isLogin()) {
@@ -20,7 +24,7 @@ const App = {
     view: () => {
         return [
             m(Loader),
-            setTimeout(function () { App.isAuth() }, 300)
+            setTimeout(function() { App.isAuth() }, 300)
         ];
     },
 };

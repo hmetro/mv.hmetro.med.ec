@@ -45,8 +45,19 @@ const Imagen = {
     error: "",
     showResultados: "d-none",
     showButtons: "",
+    loader: false,
     imprimirResultado: (url) => {
-        printJS(url)
+
+
+
+        printJS({
+            printable: url,
+            type: 'pdf',
+
+        })
+
+
+
     },
     descargarResultado: (url) => {
         window.open(url)
@@ -54,7 +65,7 @@ const Imagen = {
     fetch: () => {
         Imagen.data = [];
         Imagen.error = "";
-
+        Imagen.loader = true;
         m.request({
                 method: "GET",
                 url: "https://api.hospitalmetropolitano.org/t/v1/resultados-img/" + ResultadoPaciente.nhc,
@@ -63,6 +74,8 @@ const Imagen = {
                 },
             })
             .then(function(result) {
+                Imagen.loader = false;
+
                 if (result.status && result.data.length !== 0) {
                     Imagen.data = result.data;
                 } else {
@@ -70,6 +83,7 @@ const Imagen = {
                 }
             })
             .catch(function(e) {
+                Imagen.loader = false;
                 Imagen.error = "Error de red inesperado. Lo reintetaremos por ti automaticamente en unos segundos. Si el inconveniente persiste comunícate con soporte. Ext: 2020 CONCAS.";
                 setTimeout(function() { Imagen.fetch(); }, 5000);
             })
@@ -80,7 +94,7 @@ const Imagen = {
     },
     view: () => {
 
-        return Imagen.error ? [
+        return (Imagen.error && !Imagen.loader) ? [
             m(".tab-pane.fade[id='v-pills-imagen'][role='tabpanel']", [
                 m("h4.m-text-2.",
                     m("i.icofont-file-image.mr-2"),
@@ -93,7 +107,7 @@ const Imagen = {
                     Imagen.error
                 )
             ]),
-        ] : Imagen.data.length !== 0 ? [
+        ] : (Imagen.data.length !== 0 && !Imagen.loader) ? [
             m(".tab-pane.fade[id='v-pills-imagen'][role='tabpanel']", [
                 m("h4.m-text-2.",
                     m("i.icofont-file-image.mr-2"),
@@ -181,6 +195,7 @@ const Imagen = {
                                                         ]),
                                                         m("button.capsul.fz-poppins.text-default.radius-pill.active", {
                                                             onclick: () => {
+                                                                Imagen.loader = true;
                                                                 Imagen.imprimirResultado(_v.URL_INFORME)
                                                             },
                                                             "style": { "cursor": "pointer" }
@@ -654,7 +669,7 @@ const Laboratorio = {
                                                             " Ver "
 
                                                         ]),
-                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                        m("button.capsul.fz-poppins.text-default.radius-pill.d-none", {
                                                             title: " Descargar Resultado ",
 
                                                             onclick: () => {
