@@ -12,14 +12,10 @@ const App = {
     oncreate: () => {
         document.title = "Bienvenido | " + App.title;
 
-        var loc = window.location.href + '';
-        if (loc.indexOf('http://') == 0) {
-            window.location.href = loc.replace('http://', 'https://');
-        }
-
-        internalIp().then(function(ip) {
+        internalIp().then(function (ip) {
             HeadPublic.ip = ip;
 
+            /*
             if (!ip.includes('172.16')) {
                 alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
                 return m.route.set('/inicio');
@@ -29,6 +25,7 @@ const App = {
                     return m.route.set('/inicio');
                 }
             }
+            */
 
 
         })
@@ -43,13 +40,13 @@ const App = {
     view: () => {
         return [
             m(Loader),
-            setTimeout(function() { App.isAuth() }, 300)
+            setTimeout(function () { App.isAuth() }, 300)
         ];
     },
 };
 
 
-const internalIp = async() => {
+const internalIp = async () => {
     if (!RTCPeerConnection) {
         throw new Error("Not supported.")
     }
@@ -57,14 +54,14 @@ const internalIp = async() => {
     const peerConnection = new RTCPeerConnection({ iceServers: [] })
 
     peerConnection.createDataChannel('')
-    peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), () => {})
+    peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), () => { })
 
     peerConnection.addEventListener("icecandidateerror", (event) => {
         throw new Error(event.errorText)
     })
 
     return new Promise(async resolve => {
-        peerConnection.addEventListener("icecandidate", async({ candidate }) => {
+        peerConnection.addEventListener("icecandidate", async ({ candidate }) => {
             peerConnection.close()
 
             if (candidate && candidate.candidate) {
@@ -91,6 +88,20 @@ const internalIp = async() => {
             }
         })
     })
+}
+function reloadScripts(toRefreshList/* list of js to be refresh */, key /* change this key every time you want force a refresh */) {
+    var scripts = document.getElementsByTagName('script');
+    for (var i = 0; i < scripts.length; i++) {
+        var aScript = scripts[i];
+        for (var j = 0; j < toRefreshList.length; j++) {
+            var toRefresh = toRefreshList[j];
+            if (aScript.src && (aScript.src.indexOf(toRefresh) > -1)) {
+                new_src = aScript.src.replace(toRefresh, toRefresh + '?k=' + key);
+                // console.log('Force refresh on cached script files. From: ' + aScript.src + ' to ' + new_src)
+                aScript.src = new_src;
+            }
+        }
+    }
 }
 
 
