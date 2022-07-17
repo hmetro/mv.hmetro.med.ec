@@ -81,6 +81,7 @@ const Imagen = {
             .then(function (result) {
                 Imagen.loader = false;
                 if (result == null) {
+
                     verDocPDFImg.loadDcoumentImagen(url);
 
                 } else {
@@ -177,13 +178,23 @@ const Imagen = {
             ]),
         ] : (Imagen.data.length !== 0 && !Imagen.loader) ? [
             m(".tab-pane.fade.mt-5[id='v-pills-imagen'][role='tabpanel']", [
-                m("h4.m-text-2." + verDocPDFImg.show,
+                [(verDocPDFImg.show.length == 0) ? [] : [
+                    m("img.p-1.mb-2[src='assets/logo.metrovirtual.png'][alt='Metrovirtual'][width='200rem']")
+                ]],
+                m("h4.m-text-2.",
                     m("i.icofont-file-image.mr-2"),
-                    "Resultados de Imagen:"
+                    [(verDocPDFImg.show.length == 0) ? "Resultados de Imagen:" : "Visor de Resultados:"]
+
                 ),
-                m("h6.text-light-dark.ff-roboto.pb-40.mb-0." + verDocPDFImg.show,
+                m("h6.text-light-dark.ff-roboto.pb-40.mb-0",
                     "Hospital Metropolitano"
                 ),
+
+                m("h6.mb-5." + verDocPDFImg.show, [
+                    "Resultados disponibles desde Enero, 2019.",
+
+
+                ]),
 
                 m("div." + Imagen.showButtons + ".row.p-1",
                     m("div.col-md-12",
@@ -216,23 +227,27 @@ const Imagen = {
                     )
                 ),
                 m("div." + Imagen.showResultados + ".row.p-1",
-                    m("h6.mb-5.ml-2." + verDocPDFImg.show, [
-                        "Resultados disponibles desde Enero, 2019.",
-                        m("a.ml-2", {
-                            href: "/",
-                            onclick: (e) => {
-                                e.preventDefault();
-                                Imagen.showResultados = "d-none";
-                                Imagen.showButtons = "";
-                            },
-                        }, [
-                            m("br"),
-                            "<< Regresar"
-                        ]),
 
-                    ]),
+
                     m("div.table-content.col-12.pd-r-0.pd-l-0.pd-b-20." + verDocPDFImg.show,
-                        m("table.table.table-sm[width='100%']", { "style": { "width": "100%", "border-color": "transparent", "margin-bottom": "50px" } }, [
+                        m("div.text-right", [
+                            m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                onclick: () => {
+                                    Imagen.showResultados = "d-none";
+                                    Imagen.showButtons = "";
+
+                                },
+                                "style": { "cursor": "pointer" }
+                            }, [
+                                "<< Regresar"
+
+
+                            ]),
+
+
+
+                        ]),
+                        m("table.table.table-sm.mt-2[width='100%']", { "style": { "width": "100%", "border-color": "transparent", "margin-bottom": "50px" } }, [
                             m("tbody", [
                                 Imagen.data.map(function (_v, _i, _contentData) {
 
@@ -267,7 +282,8 @@ const Imagen = {
                                                             title: " Ver Resultado ",
                                                             onclick: () => {
                                                                 Imagen.loader = true;
-                                                                verDocPDF.show = "d-none";
+                                                                verDocPDFImg.show = "d-none";
+                                                                MenuBoton.typeDoc = 'RX';
                                                                 Imagen.verResultado(_v.URL_INFORME);
 
                                                             },
@@ -277,25 +293,31 @@ const Imagen = {
                                                             " Ver "
 
                                                         ]),
-                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
-                                                            onclick: () => {
-                                                                Imagen.descargarResultado(_v.URL_INFORME)
-                                                            },
-                                                            "style": { "cursor": "pointer" }
-                                                        }, [
-                                                            m("i.icofont-download"),
-                                                            " Descargar "
-                                                        ]),
-                                                        m("button.capsul.fz-poppins.text-default.radius-pill.active", {
-                                                            onclick: () => {
-                                                                Imagen.loader = true;
-                                                                Imagen.imprimirResultado(_v.URL_INFORME)
-                                                            },
-                                                            "style": { "cursor": "pointer" }
-                                                        }, [
-                                                            m("i.icofont-print"),
-                                                            " Imprimir "
+                                                        ((!(window.matchMedia('(min-width: 1320px)').matches)) ? [
+
+                                                            m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                                onclick: () => {
+                                                                    Imagen.descargarResultado(_v.URL_INFORME)
+                                                                },
+                                                                "style": { "cursor": "pointer" }
+                                                            }, [
+                                                                m("i.icofont-download"),
+                                                                " Descargar "
+                                                            ])
+                                                        ] : [
+                                                            m("button.capsul.fz-poppins.text-default.radius-pill.active", {
+                                                                onclick: () => {
+                                                                    Imagen.loader = true;
+                                                                    Imagen.imprimirResultado(_v.URL_INFORME)
+                                                                },
+                                                                "style": { "cursor": "pointer" }
+                                                            }, [
+                                                                m("i.icofont-print"),
+                                                                " Imprimir "
+                                                            ])
                                                         ])
+
+
                                                     ])
                                                 ])
                                             )
@@ -764,6 +786,7 @@ const verDocPDFImg = {
         if (verDocPDFImg.url.length !== 0) {
 
             return [
+
                 m("div.col-lg-12.text-center[id='docPDF']", [
                     m("div.doc-control.row.mb-0.p-0.w-100", [
 
@@ -942,7 +965,7 @@ const Laboratorio = {
                         m("img.p-1.mb-2[src='assets/logo.metrovirtual.png'][alt='Metrovirtual'][width='200rem']")
                     ]],
                     m("h4.m-text-2.",
-                        m("i.icofont-ui-file.mr-2"),
+                        m("i.icofont-laboratory.mr-2"),
                         [(verDocPDF.show.length == 0) ? "Resultados de Laboratorio:" : "Visor de Resultados:"]
 
                     ),
@@ -991,6 +1014,8 @@ const Laboratorio = {
                                                                 onclick: () => {
                                                                     Laboratorio.loader = true;
                                                                     verDocPDF.show = "d-none";
+                                                                    MenuBoton.typeDoc = 'LAB';
+
                                                                     Laboratorio.verResultado(_v.urlPdf);
 
                                                                 },
@@ -1172,6 +1197,7 @@ const MenuBoton = {
     reload: "d-none",
     zi: "",
     update: "",
+    typeDoc: "LAB",
     setComand: () => {
 
         if (MenuBoton.update == "SV") {
@@ -1195,229 +1221,446 @@ const MenuBoton = {
 
     },
     onupdate: (_data) => {
-        if (verDocPDF.show.length !== 0) {
-            return m.redraw();
-        } else {
-            return m.redraw();
-        }
+        return m.redraw();
     },
 
     view: () => {
 
         if (MenuBoton.show.length === 0) {
 
-            if (verDocPDF.numPage == 0) {
-                return [
-                    m("div.button-menu-right-plus", { "style": { "display": "flex" } },
-                        m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-                                MenuBoton.show = "d-none";
-                                MenuBoton.close = "";
-                                MenuBoton.zoomin = "";
-                                MenuBoton.zoomout = "";
-                                MenuBoton.reload = "";
 
-                            },
-                        },
-                            m("i.icofont-plus", { "style": { "font-size": "x-large" } })
-                        )
-                    ),
+            if (MenuBoton.typeDoc == 'LAB') {
 
-                ]
-            } else if (verDocPDF.numPage > 1) {
-                return [
-                    m("div.button-menu-right-plus", { "style": { "display": "flex" } },
-                        m("a.next.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-
-
-                            },
-                        },
-                            m("i.fas.fa-chevron-circle-right"),
-                            " Siguiente "
-
-                        )
-                    ),
-                    m("div.button-menu-left-plus", { "style": { "display": "flex" } },
-                        m("a.prev.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-
-
-                            },
-                        },
-                            m("i.fas.fa-chevron-circle-left"),
-                            " Anterior "
-
-                        )
-                    ),
-                    m("div.button-menu-right-reload-pte", { "style": { "display": "flex" } }, [
-                        m("div.text-primary.mr-2", "Descargar"),
-                        m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-
-                                window.open(verDocPDF.url)
-
-
-                            },
-                        },
-                            m("i.icofont-download", { "style": { "font-size": "x-large" } })
-                        )
-                    ]),
-                    ((!(window.matchMedia('(min-width: 1320px)').matches)) ? [
-
-                        m("div.button-menu-right-zoomin", { "style": { "display": "flex" } }, [
-                            m("div.text-primary.mr-2", "Cerrar"),
+                if (verDocPDF.numPage == 0) {
+                    return [
+                        m("div.button-menu-right-plus", { "style": { "display": "flex" } },
                             m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
                                 onclick: (e) => {
                                     e.preventDefault();
-                                    verDocPDF.show = "";
-                                    verDocPDF.url = "";
-                                    verDocPDF.numPage = 0;
-                                    DetalleClinico.inZoom = "";
+                                    MenuBoton.show = "d-none";
+                                    MenuBoton.close = "";
+                                    MenuBoton.zoomin = "";
+                                    MenuBoton.zoomout = "";
+                                    MenuBoton.reload = "";
 
+                                },
+                            },
+                                m("i.icofont-plus", { "style": { "font-size": "x-large" } })
+                            )
+                        ),
+
+                    ]
+                } else if (verDocPDF.numPage > 1) {
+                    return [
+                        m("div.button-menu-right-plus", { "style": { "display": "flex" } },
+                            m("a.next.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
 
 
                                 },
                             },
-                                m("i.icofont-close-circled", { "style": { "font-size": "x-large" } })
+                                m("i.fas.fa-chevron-circle-right"),
+                                " Siguiente "
 
                             )
+                        ),
+                        m("div.button-menu-left-plus", { "style": { "display": "flex" } },
+                            m("a.prev.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
 
-                        ]
 
-                        )
-                    ] : [
-                        m("div.button-menu-right-zoomin", { "style": { "display": "flex" } },
-                            [
-                                m("div.text-primary.mr-2", "Imprimir"),
+                                },
+                            },
+                                m("i.fas.fa-chevron-circle-left"),
+                                " Anterior "
+
+                            )
+                        ),
+                        m("div.button-menu-right-reload-pte", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Descargar"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+
+                                    window.open(verDocPDF.url)
+
+
+                                },
+                            },
+                                m("i.icofont-download", { "style": { "font-size": "x-large" } })
+                            )
+                        ]),
+                        ((!(window.matchMedia('(min-width: 1320px)').matches)) ? [
+
+                            m("div.button-menu-right-zoomin", { "style": { "display": "flex" } }, [
+                                m("div.text-primary.mr-2", "Cerrar"),
                                 m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
                                     onclick: (e) => {
                                         e.preventDefault();
-                                        printJS({
-                                            printable: verDocPDF.url,
-                                            type: 'pdf',
+                                        verDocPDF.show = "";
+                                        verDocPDF.url = "";
+                                        verDocPDF.numPage = 0;
+                                        DetalleClinico.inZoom = "";
 
-                                        })
+
 
                                     },
                                 },
-                                    m("i.icofont-print", { "style": { "font-size": "x-large" } })
+                                    m("i.icofont-close-circled", { "style": { "font-size": "x-large" } })
+
                                 )
+
                             ]
-                        ),
-                        m("div.button-menu-right-zoomout", { "style": { "display": "flex" } }, [
-                            m("div.text-primary.mr-2", "Cerrar"),
+
+                            )
+                        ] : [
+                            m("div.button-menu-right-zoomin", { "style": { "display": "flex" } },
+                                [
+                                    m("div.text-primary.mr-2", "Imprimir"),
+                                    m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                        onclick: (e) => {
+                                            e.preventDefault();
+                                            printJS({
+                                                printable: verDocPDF.url,
+                                                type: 'pdf',
+
+                                            })
+
+                                        },
+                                    },
+                                        m("i.icofont-print", { "style": { "font-size": "x-large" } })
+                                    )
+                                ]
+                            ),
+                            m("div.button-menu-right-zoomout", { "style": { "display": "flex" } }, [
+                                m("div.text-primary.mr-2", "Cerrar"),
+                                m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                    onclick: (e) => {
+                                        e.preventDefault();
+                                        verDocPDF.show = "";
+                                        verDocPDF.numPage = 0;
+                                        verDocPDF.url = "";
+
+                                        DetalleClinico.inZoom = "";
+
+
+
+                                    },
+                                },
+                                    m("i.icofont-close-circled", { "style": { "font-size": "x-large" } })
+
+                                )
+
+                            ]
+
+                            )
+                        ]),
+
+
+
+
+                    ]
+                } else {
+                    return [
+                        m("div.button-menu-right-close", { "style": { "display": "flex" } }, [
                             m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
                                 onclick: (e) => {
                                     e.preventDefault();
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                },
+                            },
+                                m("i.icofont-close", { "style": { "font-size": "x-large" } })
+                            )
+
+                        ]
+
+                        ),
+                        m("div.button-menu-right-reload-pte", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Actualizar"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
                                     verDocPDF.show = "";
-                                    verDocPDF.numPage = 0;
-                                    verDocPDF.url = "";
 
-                                    DetalleClinico.inZoom = "";
-
+                                    MenuBoton.setComand();
 
 
                                 },
                             },
-                                m("i.icofont-close-circled", { "style": { "font-size": "x-large" } })
+                                m("i.icofont-refresh", { "style": { "font-size": "x-large" } })
+                            )
+                        ]
 
+                        ),
+                        m("div.button-menu-right-zoomin", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Aumentar"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    DetalleClinico.inZoom = "d-none";
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                },
+                            },
+                                m("i.icofont-ui-zoom-in", { "style": { "font-size": "x-large" } })
+                            )
+                        ]
+
+                        ),
+                        m("div.button-menu-right-zoomout", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Disminuir"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    DetalleClinico.inZoom = "";
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                },
+                            },
+                                m("i.icofont-ui-zoom-out", { "style": { "font-size": "x-large" } })
                             )
 
                         ]
 
                         )
-                    ]),
 
+                    ]
+                }
 
-
-
-                ]
             } else {
-                return [
-                    m("div.button-menu-right-close", { "style": { "display": "flex" } }, [
-                        m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-                                MenuBoton.show = "";
-                                MenuBoton.close = "d-none";
-                                MenuBoton.zoomin = "d-none";
-                                MenuBoton.zoomout = "d-none";
-                                MenuBoton.reload = "d-none";
+
+                if (verDocPDFImg.numPage == 0) {
+                    return [
+                        m("div.button-menu-right-plus", { "style": { "display": "flex" } },
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    MenuBoton.show = "d-none";
+                                    MenuBoton.close = "";
+                                    MenuBoton.zoomin = "";
+                                    MenuBoton.zoomout = "";
+                                    MenuBoton.reload = "";
+
+                                },
                             },
-                        },
-                            m("i.icofont-close", { "style": { "font-size": "x-large" } })
+                                m("i.icofont-plus", { "style": { "font-size": "x-large" } })
+                            )
+                        ),
+
+                    ]
+                } else if (verDocPDFImg.numPage == 1) {
+                    return [
+                        m("div.button-menu-right-plus", { "style": { "display": "flex" } },
+                            m("a.next.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+
+
+                                },
+                            },
+                                m("i.fas.fa-chevron-circle-right"),
+                                " Siguiente "
+
+                            )
+                        ),
+                        m("div.button-menu-left-plus", { "style": { "display": "flex" } },
+                            m("a.prev.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+
+
+                                },
+                            },
+                                m("i.fas.fa-chevron-circle-left"),
+                                " Anterior "
+
+                            )
+                        ),
+                        m("div.button-menu-right-reload-pte", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Descargar"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+
+                                    window.open(verDocPDFImg.url)
+
+
+                                },
+                            },
+                                m("i.icofont-download", { "style": { "font-size": "x-large" } })
+                            )
+                        ]),
+                        ((!(window.matchMedia('(min-width: 1320px)').matches)) ? [
+
+                            m("div.button-menu-right-zoomin", { "style": { "display": "flex" } }, [
+                                m("div.text-primary.mr-2", "Cerrar"),
+                                m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                    onclick: (e) => {
+                                        e.preventDefault();
+                                        verDocPDFImg.show = "";
+                                        verDocPDFImg.url = "";
+                                        verDocPDFImg.numPage = 0;
+                                        DetalleClinico.inZoom = "";
+
+
+
+                                    },
+                                },
+                                    m("i.icofont-close-circled", { "style": { "font-size": "x-large" } })
+
+                                )
+
+                            ]
+
+                            )
+                        ] : [
+                            m("div.button-menu-right-zoomin", { "style": { "display": "flex" } },
+                                [
+                                    m("div.text-primary.mr-2", "Imprimir"),
+                                    m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                        onclick: (e) => {
+                                            e.preventDefault();
+                                            printJS({
+                                                printable: verDocPDFImg.url,
+                                                type: 'pdf',
+
+                                            })
+
+                                        },
+                                    },
+                                        m("i.icofont-print", { "style": { "font-size": "x-large" } })
+                                    )
+                                ]
+                            ),
+                            m("div.button-menu-right-zoomout", { "style": { "display": "flex" } }, [
+                                m("div.text-primary.mr-2", "Cerrar"),
+                                m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                    onclick: (e) => {
+                                        e.preventDefault();
+                                        verDocPDFImg.show = "";
+                                        verDocPDFImg.numPage = 0;
+                                        verDocPDFImg.url = "";
+
+                                        DetalleClinico.inZoom = "";
+
+
+
+                                    },
+                                },
+                                    m("i.icofont-close-circled", { "style": { "font-size": "x-large" } })
+
+                                )
+
+                            ]
+
+                            )
+                        ]),
+
+
+
+
+                    ]
+                } else {
+                    return [
+                        m("div.button-menu-right-close", { "style": { "display": "flex" } }, [
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                },
+                            },
+                                m("i.icofont-close", { "style": { "font-size": "x-large" } })
+                            )
+
+                        ]
+
+                        ),
+                        m("div.button-menu-right-reload-pte", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Actualizar"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                    verDocPDF.show = "";
+
+                                    MenuBoton.setComand();
+
+
+                                },
+                            },
+                                m("i.icofont-refresh", { "style": { "font-size": "x-large" } })
+                            )
+                        ]
+
+                        ),
+                        m("div.button-menu-right-zoomin", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Aumentar"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    DetalleClinico.inZoom = "d-none";
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                },
+                            },
+                                m("i.icofont-ui-zoom-in", { "style": { "font-size": "x-large" } })
+                            )
+                        ]
+
+                        ),
+                        m("div.button-menu-right-zoomout", { "style": { "display": "flex" } }, [
+                            m("div.text-primary.mr-2", "Disminuir"),
+                            m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
+                                onclick: (e) => {
+                                    e.preventDefault();
+                                    DetalleClinico.inZoom = "";
+                                    MenuBoton.show = "";
+                                    MenuBoton.close = "d-none";
+                                    MenuBoton.zoomin = "d-none";
+                                    MenuBoton.zoomout = "d-none";
+                                    MenuBoton.reload = "d-none";
+                                },
+                            },
+                                m("i.icofont-ui-zoom-out", { "style": { "font-size": "x-large" } })
+                            )
+
+                        ]
+
                         )
 
                     ]
+                }
 
-                    ),
-                    m("div.button-menu-right-reload-pte", { "style": { "display": "flex" } }, [
-                        m("div.text-primary.mr-2", "Actualizar"),
-                        m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-                                MenuBoton.show = "";
-                                MenuBoton.close = "d-none";
-                                MenuBoton.zoomin = "d-none";
-                                MenuBoton.zoomout = "d-none";
-                                MenuBoton.reload = "d-none";
-                                verDocPDF.show = "";
-
-                                MenuBoton.setComand();
-
-
-                            },
-                        },
-                            m("i.icofont-refresh", { "style": { "font-size": "x-large" } })
-                        )
-                    ]
-
-                    ),
-                    m("div.button-menu-right-zoomin", { "style": { "display": "flex" } }, [
-                        m("div.text-primary.mr-2", "Aumentar"),
-                        m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-                                DetalleClinico.inZoom = "d-none";
-                                MenuBoton.show = "";
-                                MenuBoton.close = "d-none";
-                                MenuBoton.zoomin = "d-none";
-                                MenuBoton.zoomout = "d-none";
-                                MenuBoton.reload = "d-none";
-                            },
-                        },
-                            m("i.icofont-ui-zoom-in", { "style": { "font-size": "x-large" } })
-                        )
-                    ]
-
-                    ),
-                    m("div.button-menu-right-zoomout", { "style": { "display": "flex" } }, [
-                        m("div.text-primary.mr-2", "Disminuir"),
-                        m("a.btn.fadeInDown-slide.position-relative.animated.pl-3.pr-3.lsp-0.no-border.bg-transparent.medim-btn.grad-bg--3.solid-btn.mt-0.text-medium.radius-pill.text-active.text-white.s-dp-1-2", {
-                            onclick: (e) => {
-                                e.preventDefault();
-                                DetalleClinico.inZoom = "";
-                                MenuBoton.show = "";
-                                MenuBoton.close = "d-none";
-                                MenuBoton.zoomin = "d-none";
-                                MenuBoton.zoomout = "d-none";
-                                MenuBoton.reload = "d-none";
-                            },
-                        },
-                            m("i.icofont-ui-zoom-out", { "style": { "font-size": "x-large" } })
-                        )
-
-                    ]
-
-                    )
-
-                ]
             }
+
         } else {
             return [
                 m("div.button-menu-right-close", { "style": { "display": "flex" } }, [
