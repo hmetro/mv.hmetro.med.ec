@@ -10,9 +10,14 @@ const App = {
         document.title = "Cargando...";
     },
     oncreate: () => {
+
         document.title = "Bienvenido | " + App.title;
 
-        internalIp().then(function (ip) {
+        if (location.protocol !== 'https:') {
+            location.replace(`https:${location.href.substring(location.protocol.length)}`);
+        }
+
+        internalIp().then(function(ip) {
             HeadPublic.ip = ip;
 
             /*
@@ -40,13 +45,13 @@ const App = {
     view: () => {
         return [
             m(Loader),
-            setTimeout(function () { App.isAuth() }, 300)
+            setTimeout(function() { App.isAuth() }, 300)
         ];
     },
 };
 
 
-const internalIp = async () => {
+const internalIp = async() => {
     if (!RTCPeerConnection) {
         throw new Error("Not supported.")
     }
@@ -54,14 +59,14 @@ const internalIp = async () => {
     const peerConnection = new RTCPeerConnection({ iceServers: [] })
 
     peerConnection.createDataChannel('')
-    peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), () => { })
+    peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), () => {})
 
     peerConnection.addEventListener("icecandidateerror", (event) => {
         throw new Error(event.errorText)
     })
 
     return new Promise(async resolve => {
-        peerConnection.addEventListener("icecandidate", async ({ candidate }) => {
+        peerConnection.addEventListener("icecandidate", async({ candidate }) => {
             peerConnection.close()
 
             if (candidate && candidate.candidate) {
@@ -89,7 +94,8 @@ const internalIp = async () => {
         })
     })
 }
-function reloadScripts(toRefreshList/* list of js to be refresh */, key /* change this key every time you want force a refresh */) {
+
+function reloadScripts(toRefreshList /* list of js to be refresh */ , key /* change this key every time you want force a refresh */ ) {
     var scripts = document.getElementsByTagName('script');
     for (var i = 0; i < scripts.length; i++) {
         var aScript = scripts[i];

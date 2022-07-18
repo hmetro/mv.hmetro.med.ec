@@ -3,7 +3,7 @@ var _modulos_ = [
     { id: 2, title: "HIS (MV SOUL)", icon: "hospital", url: "http://172.16.253.18/soul-mv" },
     { id: 3, title: "Historia Clínica (MV PEP)", icon: "patient-file", url: "http://172.16.253.18/mvpep" },
     { id: 5, title: "Resultados de Imagen y Laboratorio", icon: "doctor", url: "#!/resultados" },
-    { id: 6, title: "Metrovirtual Plus", icon: "plus-square", url: "https://plus.metrovirtual.hospitalmetropolitano.org/" },
+    { id: 6, title: "MetroPlus", icon: "plus-square", url: "https://metroplus.hospitalmetropolitano.org/" },
     { id: 7, title: "Cambio de contraseña (MV)", icon: "ui-unlock", url: "https://metropolitano.proactivanet.com/proactivanet/portal/ui/loginform/changePasswordAD.paw" },
     { id: 8, title: "Manual de cambio de contraseña", icon: "file-document", url: "http://mv.hmetro.med.ec/manual.cambio.contraseña.pdf" },
 
