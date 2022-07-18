@@ -177,7 +177,10 @@ const Imagen = {
                 )
             ]),
         ] : (Imagen.data.length !== 0 && !Imagen.loader) ? [
-            m(".tab-pane.fade.mt-5[id='v-pills-imagen'][role='tabpanel']", [
+            m(".tab-pane.fade[id='v-pills-imagen'][role='tabpanel']", {
+                class: (verDocPDFImg.show.length == 0) ? "mt-5" : " mt-0"
+
+            }, [
                 [(verDocPDFImg.show.length == 0) ? [] : [
                     m("img.p-1.mb-2[src='assets/logo.metrovirtual.png'][alt='Metrovirtual'][width='200rem']")
                 ]],
@@ -957,7 +960,7 @@ const Laboratorio = {
                 )
             ]),
         ] : (Laboratorio.data.length !== 0 && !Laboratorio.loader) ? [
-            m(".tab-pane.fade.active.show[id='v-pills-lab'][role='tabpanel']", {
+            m(".tab-pane.fade[id='v-pills-lab'][role='tabpanel']", {
                 class: (verDocPDF.show.length == 0) ? "mt-5" : "mt-0"
             },
                 [
@@ -1764,6 +1767,9 @@ const DetalleClinico = {
     oninit: () => {
         MenuBoton.update = "LAB";
         DetallePaciente.fetch();
+    },
+    oncreate: () => {
+
     },
     view: () => {
         return DetallePaciente.error ? [
