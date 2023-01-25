@@ -12,7 +12,6 @@ const VisorRis = {
     view: () => {
 
 
-        document.cookie = "cookieName=; Path=/; domain=https://imagen.hmetro.med.ec; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
 
         VisorRis.url = "https://imagen.hmetro.med.ec/zfp?Lights=on&mode=proxy#view&pid=" + ResultadoPaciente.nhc + "&un=WEBAPI&pw=lEcfvZxzlXTsfimMMonmVZZ15IqsgEcdV%2forI8EUrLY%3d";
 
@@ -137,7 +136,7 @@ const Imagen = {
         Imagen.loader = true;
         m.request({
                 method: "GET",
-                url: "https://api.hospitalmetropolitano.org/t/v1/resultados-img/" + ResultadoPaciente.nhc,
+                url: "//api.hospitalmetropolitano.org/t/v1/resultados-img/" + ResultadoPaciente.nhc,
                 headers: {
                     "Authorization": localStorage.accessToken,
                 },
@@ -923,7 +922,7 @@ const Laboratorio = {
 
         m.request({
                 method: "GET",
-                url: "https://api.hospitalmetropolitano.org/t/v1/resultados-laboratorio/" + ResultadoPaciente.nhc,
+                url: "//api.hospitalmetropolitano.org/t/v1/resultados-laboratorio/" + ResultadoPaciente.nhc,
                 headers: {
                     "Authorization": localStorage.accessToken,
                 },
@@ -997,22 +996,6 @@ const Laboratorio = {
                                             m("td", { "style": { "border-color": "transparent", "padding": "0px" } },
                                                 m("div.row.bg-white.radius-5.p-2.article-tags", [
                                                     m("div.col-12.p-0.text-right", [
-                                                        [
-                                                            ((Number(_v.ID_STUDIO) > 22000000) ? [
-                                                                m("button.capsul.fz-poppins.text-default.radius-pill.active", {
-                                                                    title: " Status Pedido ",
-                                                                    onclick: () => {
-                                                                        window.open("https://plus.metrovirtual.hospitalmetropolitano.org/laboratorio/pedido/" + Number(_v.ID_STUDIO))
-
-                                                                    },
-                                                                    "style": { "cursor": "pointer" }
-                                                                }, [
-                                                                    m("i.icofont-ui-timer"),
-                                                                    " Status "
-
-                                                                ])
-                                                            ] : [])
-                                                        ],
                                                         m("button.capsul.fz-poppins.text-default.radius-pill.active", {
                                                             title: " Ver Resultado ",
                                                             onclick: () => {
@@ -1123,7 +1106,7 @@ const DetallePaciente = {
         DetallePaciente.error = "";
         m.request({
                 method: "POST",
-                url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
+                url: "//api.hospitalmetropolitano.org/t/v1/buscar-paciente",
                 body: {
                     tipoBusqueda: "nhc",
                     pte: ResultadoPaciente.nhc

@@ -21,7 +21,7 @@ const DataProvider = {
                 Loader.buttonShow = "";
                 m.request({
                         method: "POST",
-                        url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
+                        url: "//api.hospitalmetropolitano.org/t/v1/buscar-paciente",
                         body: {
                             tipoBusqueda: DataProvider.tipoBusqueda,
                             pte: DataProvider.searchField
@@ -51,7 +51,7 @@ const DataProvider = {
             Loader.buttonShow = "";
             m.request({
                     method: "POST",
-                    url: "https://api.hospitalmetropolitano.org/t/v1/buscar-paciente",
+                    url: "//api.hospitalmetropolitano.org/t/v1/buscar-paciente",
                     body: {
                         tipoBusqueda: DataProvider.tipoBusqueda,
                         pte: DataProvider.searchField
@@ -355,7 +355,7 @@ const PageResultados = {
     oncreate: () => {
         submitBusqueda();
 
-        setTimeout(function() { document.getElementById("pte").click(); }, 500);
+        setTimeout(function() { document.getElementById("cedula").click(); }, 500);
     },
 
     view: () => {
@@ -376,18 +376,6 @@ const PageResultados = {
                     m("div.row.m-mb-20",
                         m("div.col-md-12", [
                             m("div.d-flex.p-1.align-items-left.position-relative.justify-content-left", [
-                                m("div.custom-control.custom-radio.m-mb-20.pd-2", [
-                                    m("input.custom-control-input[type='radio'][id='pte'][name='tipoBusqueda'][value='pte']", {
-                                        onclick: (e) => {
-                                            if (e.target.checked) {
-                                                DataProvider.tipoBusqueda = e.target.value;
-                                            }
-                                        }
-                                    }),
-                                    m("label.custom-control-label[for='pte']",
-                                        "Apellidos y Nombres"
-                                    )
-                                ]),
                                 m("div.custom-control.custom-radio.m-mb-20.ml-2.pd-2", [
                                     m("input.custom-control-input[type='radio'][id='cedula'][name='tipoBusqueda'][value='cc']", {
                                         onclick: (e) => {
@@ -400,6 +388,7 @@ const PageResultados = {
                                         "Cédula"
                                     )
                                 ]),
+
                                 m("div.custom-control.custom-radio.m-mb-20.ml-2.pd-2", [
                                     m("input.custom-control-input[type='radio'][id='nhc'][name='tipoBusqueda'][value='nhc']", {
                                         onclick: (e) => {
@@ -412,6 +401,19 @@ const PageResultados = {
                                         "Historia Clínica"
                                     )
                                 ]),
+                                m("div.custom-control.custom-radio.m-mb-20.ml-2.pd-2", [
+                                    m("input.custom-control-input[type='radio'][id='pte'][name='tipoBusqueda'][value='pte']", {
+                                        onclick: (e) => {
+                                            if (e.target.checked) {
+                                                DataProvider.tipoBusqueda = e.target.value;
+                                            }
+                                        }
+                                    }),
+                                    m("label.custom-control-label[for='pte']",
+                                        "Apellidos y Nombres"
+                                    )
+                                ])
+
 
                             ]),
                             m("div.input-group.banenr-seach.bg-white.m-mt-30.mb-0", [

@@ -25,8 +25,8 @@ const HeadPublic = {
                                 m("ul.navbar-nav.bcbd_nav.mr-lg-4.", [
                                     m("li.nav-item",
                                         m("a.nav-link[href='/']",
-                                            " IP: ",
-                                            HeadPublic.ip
+                                            " PACIENTES ",
+
                                         )
                                     ),
 

@@ -1,6 +1,5 @@
 import Auth from '../models/auth';
 import Loader from './loader';
-import HeadPublic from '../views/layout/header-public';
 
 
 
@@ -10,30 +9,8 @@ const App = {
         document.title = "Cargando...";
     },
     oncreate: () => {
-
         document.title = "Bienvenido | " + App.title;
 
-        if (location.protocol !== 'https:') {
-            location.replace(`https:${location.href.substring(location.protocol.length)}`);
-        }
-
-        internalIp().then(function(ip) {
-            HeadPublic.ip = ip;
-
-            /*
-            if (!ip.includes('172.16')) {
-                alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
-                return m.route.set('/inicio');
-            } else {
-                if (!ip.includes('172.16') && !ip.includes('172.17')) {
-                    alert("Ud debe conectarse a cualquier red del Hospital Metropolitano para continuar.")
-                    return m.route.set('/inicio');
-                }
-            }
-            */
-
-
-        })
     },
     isAuth: () => {
         if (Auth.isLogin()) {
